@@ -1,5 +1,8 @@
 const telegram = window.Telegram?.WebApp;
 const storedTheme = localStorage.getItem("rozicoin-theme");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const introSeen = sessionStorage.getItem("rozicoin-intro-seen") === "true";
+let introTimer;
 
 telegram?.ready?.();
 telegram?.expand?.();
@@ -15,6 +18,8 @@ const state = {
   sendRecipient: "TX7a...9Qm2",
   toast: "",
   riskAccepted: false,
+  motionEnabled: !reducedMotion,
+  showIntro: !introSeen && !reducedMotion,
 };
 
 const kycSteps = [
@@ -832,8 +837,10 @@ function render() {
   const screen = screens[state.screen];
   const app = document.querySelector("#app");
   document.documentElement.dataset.theme = state.theme;
+  document.documentElement.dataset.motion = state.motionEnabled ? "on" : "reduced";
   app.innerHTML = `
-    <div class="workspace">
+    ${state.showIntro ? introOverlay() : ""}
+    <div class="workspace ${state.showIntro ? "is-intro-active" : ""}">
       <aside class="flow-panel" aria-label="Prototype screens">
         <div class="brand-row">
           <span class="brand-mark">R</span>
@@ -850,6 +857,11 @@ function render() {
 
       <main class="phone-stage">
         <div class="phone-shell">
+          <div class="ambient-layer" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div class="telegram-chrome">
             <button class="chrome-button" type="button" data-back ${screen.back ? "" : "disabled"}>Back</button>
             <div>
@@ -858,7 +870,7 @@ function render() {
             </div>
             <button class="chrome-button" type="button">Close</button>
           </div>
-          <article class="phone-screen">
+          <article class="phone-screen" data-screen-id="${state.screen}">
             <header class="screen-header">
               <p>${screen.eyebrow}</p>
               <h1>${screen.title}</h1>
@@ -868,7 +880,7 @@ function render() {
             </div>
           </article>
           <footer class="main-button-bar">
-            <button type="button" data-next>${screen.mainLabel}</button>
+            <button type="button" data-next><span>${screen.mainLabel}</span></button>
           </footer>
         </div>
       </main>
@@ -885,6 +897,7 @@ function render() {
       </aside>
     </div>
   `;
+  scheduleIntroExit();
 }
 
 function renderFlowGroup(group) {
@@ -897,6 +910,35 @@ function renderFlowGroup(group) {
           return `<button class="${active}" type="button" data-screen="${id}">${label}</button>`;
         })
         .join("")}
+    </section>
+  `;
+}
+
+function introOverlay() {
+  return `
+    <section class="intro-overlay" aria-label="Rozicoin intro">
+      <div class="intro-stage">
+        <div class="intro-phone" aria-hidden="true">
+          <span class="intro-rail"></span>
+          <span class="intro-rail"></span>
+          <span class="intro-rail"></span>
+          <div class="intro-wallet-card">
+            <span>R</span>
+            <strong>$1,792.12</strong>
+            <small>KYC unlocked</small>
+          </div>
+        </div>
+        <div class="intro-copy">
+          <p>Telegram Web App</p>
+          <h2>Rozicoin is ready.</h2>
+          <div class="intro-tags">
+            <span>TRON rails</span>
+            <span>Fast KYC</span>
+            <span>Secure wallet</span>
+          </div>
+          <button type="button" data-intro-dismiss>Enter demo</button>
+        </div>
+      </div>
     </section>
   `;
 }
@@ -1139,6 +1181,7 @@ function note(title, body) {
 
 function goNext() {
   const screen = screens[state.screen];
+  haptic("light");
   if (state.screen === "receive") {
     state.toast = "Address copied for the demo.";
     render();
@@ -1162,22 +1205,48 @@ function goNext() {
 function goBack() {
   const screen = screens[state.screen];
   if (screen.back) {
+    haptic("soft");
     state.screen = screen.back;
     render();
   }
+}
+
+function dismissIntro() {
+  if (!state.showIntro) return;
+  state.showIntro = false;
+  sessionStorage.setItem("rozicoin-intro-seen", "true");
+  render();
+}
+
+function scheduleIntroExit() {
+  clearTimeout(introTimer);
+  if (!state.showIntro || !state.motionEnabled) return;
+  introTimer = setTimeout(dismissIntro, 3200);
+}
+
+function haptic(style) {
+  telegram?.HapticFeedback?.impactOccurred?.(style);
 }
 
 document.addEventListener("click", (event) => {
   const target = event.target.closest("button");
   if (!target) return;
 
+  if (target.dataset.introDismiss !== undefined) {
+    haptic("medium");
+    dismissIntro();
+    return;
+  }
+
   if (target.dataset.copy !== undefined) {
+    haptic("light");
     state.toast = "Address copied for the demo.";
     render();
     return;
   }
 
   if (target.dataset.amount) {
+    haptic("light");
     const presets = {
       25: "312.10",
       50: "624.20",
@@ -1189,6 +1258,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (target.dataset.network) {
+    haptic("light");
     state.network = target.dataset.network;
     state.toast = `${state.network} selected.`;
     render();
@@ -1200,6 +1270,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (target.dataset.screen) {
+    haptic("light");
     state.screen = target.dataset.screen;
     if (!target.dataset.copy) {
       state.toast = "";
@@ -1219,6 +1290,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (target.dataset.themeToggle !== undefined) {
+    haptic("soft");
     state.theme = state.theme === "dark" ? "light" : "dark";
     localStorage.setItem("rozicoin-theme", state.theme);
     render();
@@ -1226,24 +1298,28 @@ document.addEventListener("click", (event) => {
   }
 
   if (target.dataset.riskToggle !== undefined) {
+    haptic("light");
     state.riskAccepted = !state.riskAccepted;
     render();
     return;
   }
 
   if (target.dataset.doc) {
+    haptic("light");
     state.documentType = target.dataset.doc;
     render();
     return;
   }
 
   if (target.dataset.pin !== undefined) {
+    haptic("light");
     state.passcodeLength = Math.min(4, state.passcodeLength + 1);
     render();
     return;
   }
 
   if (target.dataset.pinClear !== undefined) {
+    haptic("soft");
     state.passcodeLength = 0;
     render();
   }

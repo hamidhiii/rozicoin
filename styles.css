@@ -13,6 +13,11 @@
   --red: #e03131;
   --green: #2b8a3e;
   --shadow: 0 24px 70px rgba(31, 48, 43, 0.14);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-pop: cubic-bezier(0.2, 1.4, 0.32, 1);
+  --motion-fast: 180ms;
+  --motion-mid: 520ms;
+  --motion-slow: 1100ms;
 }
 
 :root[data-theme="dark"] {
@@ -37,6 +42,7 @@
 }
 
 body {
+  position: relative;
   margin: 0;
   min-height: 100vh;
   background:
@@ -49,6 +55,19 @@ body {
     sans-serif;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0 48%, rgba(18, 184, 134, 0.08) 49% 51%, transparent 52%),
+    linear-gradient(0deg, rgba(47, 128, 237, 0.05), transparent 34%),
+    repeating-linear-gradient(90deg, transparent 0 92px, rgba(21, 25, 24, 0.035) 93px 94px);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92), transparent 72%);
+  animation: backgroundSweep 14s linear infinite;
+}
+
 button,
 input {
   font: inherit;
@@ -56,6 +75,15 @@ input {
 
 button {
   cursor: pointer;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    background var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out);
+}
+
+button:active {
+  transform: translateY(1px) scale(0.98);
 }
 
 button:disabled {
@@ -71,6 +99,12 @@ button:disabled {
   justify-content: center;
   min-height: 100vh;
   padding: 32px;
+  animation: workspaceEnter var(--motion-slow) var(--ease-out) both;
+}
+
+.workspace.is-intro-active {
+  filter: saturate(0.92) blur(3px);
+  transform: scale(0.985);
 }
 
 .flow-panel,
@@ -81,6 +115,11 @@ button:disabled {
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
   padding: 18px;
+  animation: panelFloatIn 780ms var(--ease-out) both;
+}
+
+.notes-panel {
+  animation-delay: 120ms;
 }
 
 :root[data-theme="dark"] .flow-panel,
@@ -125,6 +164,8 @@ button:disabled {
   width: 36px;
   height: 36px;
   border-radius: 8px;
+  box-shadow: 0 0 0 0 rgba(18, 184, 134, 0.32);
+  animation: brandPulse 3200ms var(--ease-out) infinite;
 }
 
 .flow-list section {
@@ -162,6 +203,7 @@ button:disabled {
   background: rgba(18, 184, 134, 0.13);
   color: var(--brand-strong);
   font-weight: 800;
+  box-shadow: inset 3px 0 0 var(--brand);
 }
 
 .theme-button,
@@ -183,6 +225,7 @@ button:disabled {
 }
 
 .phone-shell {
+  position: relative;
   width: min(100%, 390px);
   height: min(850px, calc(100vh - 40px));
   min-height: 690px;
@@ -193,6 +236,49 @@ button:disabled {
   border-radius: 32px;
   background: var(--panel);
   box-shadow: 0 28px 90px rgba(13, 17, 16, 0.34);
+  isolation: isolate;
+  animation: phoneLift 900ms var(--ease-pop) both;
+}
+
+.ambient-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ambient-layer span {
+  position: absolute;
+  width: 140%;
+  height: 1px;
+  left: -20%;
+  background: linear-gradient(90deg, transparent, rgba(18, 184, 134, 0.36), transparent);
+  transform: rotate(-22deg);
+  animation: railTravel 5.6s linear infinite;
+}
+
+.ambient-layer span:nth-child(1) {
+  top: 18%;
+}
+
+.ambient-layer span:nth-child(2) {
+  top: 50%;
+  animation-delay: 1.3s;
+  background: linear-gradient(90deg, transparent, rgba(47, 128, 237, 0.28), transparent);
+}
+
+.ambient-layer span:nth-child(3) {
+  top: 78%;
+  animation-delay: 2.6s;
+  background: linear-gradient(90deg, transparent, rgba(245, 159, 0, 0.28), transparent);
+}
+
+.telegram-chrome,
+.phone-screen,
+.main-button-bar {
+  position: relative;
+  z-index: 1;
 }
 
 .telegram-chrome {
@@ -204,6 +290,7 @@ button:disabled {
   background: var(--panel-2);
   border-bottom: 1px solid var(--line);
   text-align: center;
+  animation: chromeDrop 620ms var(--ease-out) 180ms both;
 }
 
 .chrome-button {
@@ -217,6 +304,7 @@ button:disabled {
 .phone-screen {
   overflow: auto;
   padding: 22px 18px 18px;
+  animation: screenSwap 460ms var(--ease-out) both;
 }
 
 .screen-header p {
@@ -233,6 +321,7 @@ button:disabled {
   font-size: 28px;
   line-height: 1.08;
   letter-spacing: 0;
+  animation: titleReveal 620ms var(--ease-out) both;
 }
 
 .screen-body {
@@ -241,20 +330,54 @@ button:disabled {
   margin-top: 18px;
 }
 
+.screen-body > * {
+  animation: cardReveal 620ms var(--ease-out) both;
+}
+
+.screen-body > *:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.screen-body > *:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.screen-body > *:nth-child(4) {
+  animation-delay: 210ms;
+}
+
 .main-button-bar {
   padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--line);
   background: var(--panel);
+  animation: mainButtonRise 680ms var(--ease-pop) 260ms both;
 }
 
 .main-button-bar button {
+  position: relative;
   width: 100%;
   min-height: 48px;
+  overflow: hidden;
   border: 0;
   border-radius: 8px;
   background: var(--brand);
   color: #ffffff;
   font-weight: 850;
+  box-shadow: 0 13px 30px rgba(18, 184, 134, 0.32);
+}
+
+.main-button-bar button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 0 34%, rgba(255, 255, 255, 0.42) 48%, transparent 62%);
+  transform: translateX(-120%);
+  animation: buttonShine 2600ms var(--ease-out) infinite;
+}
+
+.main-button-bar button span {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-panel,
@@ -268,11 +391,24 @@ button:disabled {
 }
 
 .hero-panel {
+  position: relative;
+  overflow: hidden;
   padding: 20px;
   color: #ffffff;
   background:
     linear-gradient(135deg, rgba(18, 184, 134, 0.92), rgba(8, 127, 91, 0.94)),
     #0b7c62;
+}
+
+.hero-panel::after,
+.balance-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 0 34%, rgba(255, 255, 255, 0.2) 47%, transparent 62%);
+  transform: translateX(-120%);
+  animation: surfaceGlint 4200ms var(--ease-out) infinite;
 }
 
 .app-logo {
@@ -281,6 +417,7 @@ button:disabled {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.18);
   font-size: 28px;
+  animation: logoSnap 900ms var(--ease-pop) 220ms both;
 }
 
 .hero-panel h1 {
@@ -319,6 +456,15 @@ button:disabled {
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
+  transform-origin: center bottom;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    background var(--motion-fast) var(--ease-out);
+}
+
+.metric:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .metric strong {
@@ -381,6 +527,7 @@ button:disabled {
 .mini-chip {
   color: var(--green);
   background: rgba(43, 138, 62, 0.12);
+  animation: statusBlink 2600ms var(--ease-out) infinite;
 }
 
 .status-pill.pending {
@@ -399,6 +546,11 @@ button:disabled {
 
 .feature {
   gap: 10px;
+  transition: transform var(--motion-fast) var(--ease-out);
+}
+
+.feature:hover {
+  transform: translateX(3px);
 }
 
 .feature span,
@@ -497,6 +649,7 @@ button:disabled {
 .pin-dots span.filled {
   border-color: var(--brand);
   background: var(--brand);
+  animation: pinPop 260ms var(--ease-pop) both;
 }
 
 .number-pad {
@@ -592,6 +745,8 @@ input {
 }
 
 .document-preview {
+  position: relative;
+  overflow: hidden;
   display: flex;
   min-height: 145px;
   align-items: flex-start;
@@ -600,6 +755,15 @@ input {
   background:
     linear-gradient(135deg, rgba(47, 128, 237, 0.14), transparent),
     var(--panel-2);
+}
+
+.document-preview::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% 18px -20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(47, 128, 237, 0.42), transparent);
+  animation: railTravel 4.8s linear infinite;
 }
 
 .doc-lines {
@@ -615,6 +779,7 @@ input {
 
 .scan-frame {
   position: relative;
+  overflow: hidden;
   display: grid;
   min-height: 240px;
   place-items: center;
@@ -623,7 +788,22 @@ input {
   background: rgba(18, 184, 134, 0.08);
 }
 
+.scan-frame::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 18%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--brand), transparent);
+  box-shadow: 0 0 18px rgba(18, 184, 134, 0.42);
+  animation: scanBeam 2200ms var(--ease-out) infinite;
+}
+
 .scan-card {
+  position: relative;
+  z-index: 1;
   width: 78%;
   min-height: 132px;
   display: grid;
@@ -653,6 +833,7 @@ input {
   background:
     radial-gradient(circle at center, transparent 45%, rgba(18, 184, 134, 0.18) 46%),
     conic-gradient(var(--brand), var(--amber), var(--blue), var(--brand));
+  animation: facePulse 2400ms var(--ease-out) infinite;
 }
 
 .face-ring span {
@@ -673,7 +854,7 @@ input {
 }
 
 .review-orbit {
-  animation: spin 1.8s linear infinite;
+  animation: spin 1.8s linear infinite, facePulse 2400ms var(--ease-out) infinite;
 }
 
 .review-orbit span {
@@ -730,6 +911,7 @@ input {
   color: var(--brand-strong);
   padding: 10px 12px;
   font-weight: 800;
+  animation: toastIn 420ms var(--ease-pop) both;
 }
 
 .locked-card,
@@ -760,6 +942,8 @@ input {
 }
 
 .balance-card {
+  position: relative;
+  overflow: hidden;
   color: #ffffff;
   background:
     linear-gradient(135deg, rgba(18, 184, 134, 0.96), rgba(47, 128, 237, 0.86)),
@@ -812,6 +996,16 @@ input {
   gap: 7px;
   place-items: center;
   padding: 10px 6px;
+  transform-origin: center bottom;
+}
+
+.quick-action:hover,
+.amount-shortcuts button:hover,
+.secondary-button:hover,
+.small-link:hover {
+  border-color: rgba(18, 184, 134, 0.36);
+  box-shadow: 0 10px 26px rgba(31, 48, 43, 0.1);
+  transform: translateY(-2px);
 }
 
 .quick-action span {
@@ -823,6 +1017,11 @@ input {
   background: rgba(18, 184, 134, 0.14);
   color: var(--brand-strong);
   font-size: 11px;
+  transition: transform var(--motion-fast) var(--ease-out);
+}
+
+.quick-action:hover span {
+  transform: scale(1.08);
 }
 
 .quick-action p {
@@ -853,6 +1052,17 @@ input {
   color: var(--ink);
   padding: 13px 0;
   text-align: left;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    background var(--motion-fast) var(--ease-out);
+}
+
+.asset-row:hover,
+.recipient-row:hover,
+.activity-item:hover,
+.settings-item:hover {
+  background: rgba(18, 184, 134, 0.06);
+  transform: translateX(3px);
 }
 
 .asset-row {
@@ -876,6 +1086,17 @@ input {
   background: rgba(47, 128, 237, 0.13);
   color: var(--blue);
   font-weight: 900;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    background var(--motion-fast) var(--ease-out);
+}
+
+.asset-row:hover .asset-icon,
+.recipient-row:hover span,
+.activity-item:hover span {
+  background: rgba(18, 184, 134, 0.14);
+  color: var(--brand-strong);
+  transform: rotate(-3deg) scale(1.04);
 }
 
 .asset-icon,
@@ -923,6 +1144,7 @@ input {
   background: var(--panel);
   color: var(--brand-strong);
   box-shadow: 0 8px 20px rgba(31, 48, 43, 0.08);
+  animation: tabSelect 320ms var(--ease-pop) both;
 }
 
 .token-hero,
@@ -961,14 +1183,16 @@ input {
 .mini-chart span {
   border-radius: 6px 6px 0 0;
   background: linear-gradient(180deg, var(--brand), rgba(18, 184, 134, 0.18));
+  transform-origin: bottom;
+  animation: chartGrow 820ms var(--ease-pop) both;
 }
 
 .mini-chart span:nth-child(1) { height: 40%; }
-.mini-chart span:nth-child(2) { height: 58%; }
-.mini-chart span:nth-child(3) { height: 44%; }
-.mini-chart span:nth-child(4) { height: 72%; }
-.mini-chart span:nth-child(5) { height: 64%; }
-.mini-chart span:nth-child(6) { height: 88%; }
+.mini-chart span:nth-child(2) { height: 58%; animation-delay: 80ms; }
+.mini-chart span:nth-child(3) { height: 44%; animation-delay: 160ms; }
+.mini-chart span:nth-child(4) { height: 72%; animation-delay: 240ms; }
+.mini-chart span:nth-child(5) { height: 64%; animation-delay: 320ms; }
+.mini-chart span:nth-child(6) { height: 88%; animation-delay: 400ms; }
 
 .info-row {
   display: flex;
@@ -1017,6 +1241,15 @@ input {
 
 .qr-card span.filled {
   background: var(--ink);
+  animation: qrBlink 2600ms steps(2, end) infinite;
+}
+
+.qr-card span.filled:nth-child(3n) {
+  animation-delay: 400ms;
+}
+
+.qr-card span.filled:nth-child(4n) {
+  animation-delay: 900ms;
 }
 
 .address-line {
@@ -1127,6 +1360,7 @@ input {
   padding: 7px 12px;
   font-size: 12px;
   font-weight: 900;
+  animation: swapPulse 1800ms var(--ease-out) infinite;
 }
 
 .activity-list {
@@ -1242,6 +1476,446 @@ input {
   color: #ffffff;
 }
 
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    linear-gradient(135deg, rgba(16, 20, 18, 0.94), rgba(8, 127, 91, 0.88)),
+    repeating-linear-gradient(90deg, transparent 0 72px, rgba(255, 255, 255, 0.05) 73px 74px);
+  animation: introFadeOut 3200ms var(--ease-out) forwards;
+}
+
+.intro-stage {
+  width: min(100%, 720px);
+  display: grid;
+  grid-template-columns: 0.9fr 1fr;
+  align-items: center;
+  gap: 32px;
+  color: #ffffff;
+}
+
+.intro-phone {
+  position: relative;
+  min-height: 390px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05)),
+    rgba(13, 17, 16, 0.56);
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.34);
+  animation: introPhoneIn 1100ms var(--ease-pop) both;
+}
+
+.intro-rail {
+  position: absolute;
+  width: 150%;
+  height: 2px;
+  left: -25%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.62), transparent);
+  transform: rotate(-24deg);
+  animation: introRail 1200ms var(--ease-out) both;
+}
+
+.intro-rail:nth-child(1) {
+  top: 24%;
+}
+
+.intro-rail:nth-child(2) {
+  top: 48%;
+  animation-delay: 220ms;
+}
+
+.intro-rail:nth-child(3) {
+  top: 72%;
+  animation-delay: 440ms;
+}
+
+.intro-wallet-card {
+  position: absolute;
+  left: 34px;
+  right: 34px;
+  bottom: 42px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px);
+  padding: 18px;
+  animation: introCardIn 980ms var(--ease-pop) 520ms both;
+}
+
+.intro-wallet-card span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--brand);
+  font-weight: 900;
+}
+
+.intro-wallet-card strong {
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.intro-wallet-card small {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.intro-copy {
+  animation: introCopyIn 760ms var(--ease-out) 360ms both;
+}
+
+.intro-copy p {
+  margin: 0 0 8px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.intro-copy h2 {
+  margin: 0;
+  max-width: 420px;
+  font-size: 56px;
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+
+.intro-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px 0;
+}
+
+.intro-tags span {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 11px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.intro-copy button {
+  min-height: 46px;
+  border: 0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f241f;
+  padding: 0 18px;
+  font-weight: 900;
+}
+
+@keyframes backgroundSweep {
+  from {
+    background-position: 0 0, 0 0, 0 0;
+  }
+  to {
+    background-position: 360px 0, 0 0, 188px 0;
+  }
+}
+
+@keyframes workspaceEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes panelFloatIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes phoneLift {
+  from {
+    opacity: 0;
+    transform: translateY(34px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes chromeDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes screenSwap {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes titleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mainButtonRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes buttonShine {
+  0%,
+  42% {
+    transform: translateX(-120%);
+  }
+  72%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes railTravel {
+  from {
+    transform: translateX(-22%) rotate(-22deg);
+  }
+  to {
+    transform: translateX(22%) rotate(-22deg);
+  }
+}
+
+@keyframes surfaceGlint {
+  0%,
+  38% {
+    transform: translateX(-120%);
+  }
+  68%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes logoSnap {
+  from {
+    opacity: 0;
+    transform: rotate(-8deg) scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+@keyframes brandPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(18, 184, 134, 0.32);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(18, 184, 134, 0);
+  }
+}
+
+@keyframes statusBlink {
+  0%,
+  100% {
+    filter: saturate(1);
+  }
+  50% {
+    filter: saturate(1.45);
+  }
+}
+
+@keyframes pinPop {
+  from {
+    transform: scale(0.62);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes scanBeam {
+  0% {
+    top: 16%;
+    opacity: 0;
+  }
+  18%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    top: 82%;
+    opacity: 0;
+  }
+}
+
+@keyframes facePulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(18, 184, 134, 0.22);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(18, 184, 134, 0);
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tabSelect {
+  from {
+    transform: scale(0.94);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes chartGrow {
+  from {
+    transform: scaleY(0.1);
+    opacity: 0.2;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes qrBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+@keyframes swapPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes introFadeOut {
+  0%,
+  78% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes introPhoneIn {
+  from {
+    opacity: 0;
+    transform: translateY(34px) rotate(-3deg) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scale(1);
+  }
+}
+
+@keyframes introRail {
+  from {
+    opacity: 0;
+    transform: translateX(-35%) rotate(-24deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(18%) rotate(-24deg);
+  }
+}
+
+@keyframes introCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes introCopyIn {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -1267,6 +1941,19 @@ input {
 
   .phone-shell {
     height: min(820px, calc(100vh - 28px));
+  }
+
+  .intro-stage {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .intro-phone {
+    min-height: 260px;
+  }
+
+  .intro-copy h2 {
+    font-size: 42px;
   }
 }
 
@@ -1299,5 +1986,50 @@ input {
 
   .screen-header h1 {
     font-size: 26px;
+  }
+
+  .intro-overlay {
+    padding: 18px;
+  }
+
+  .intro-stage {
+    align-content: center;
+  }
+
+  .intro-phone {
+    min-height: 238px;
+    border-radius: 22px;
+  }
+
+  .intro-wallet-card {
+    left: 20px;
+    right: 20px;
+    bottom: 24px;
+  }
+
+  .intro-copy h2 {
+    font-size: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  body::before,
+  .ambient-layer,
+  .intro-overlay {
+    display: none !important;
+  }
+
+  .workspace.is-intro-active {
+    filter: none;
+    transform: none;
   }
 }

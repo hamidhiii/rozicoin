@@ -25,7 +25,8 @@ Then open `http://127.0.0.1:5174`.
 - Swap quote, confirmation, and success states
 - Activity list, transaction detail, profile, security, limits, and support screens
 - Light and dark theme toggle
+- First-run launch animation, animated screen transitions, wallet micro-interactions, and reduced-motion support
 
 ## Notes
 
-The prototype uses mock data only. It is ready for team review as a frontend demo and can later be migrated into React/Vite or connected to Telegram WebApp SDK events.
+The prototype uses mock data only. It is ready for team review as a frontend demo and can later be migrated into React/Vite, Remotion-style timeline components, or connected to Telegram WebApp SDK events.
