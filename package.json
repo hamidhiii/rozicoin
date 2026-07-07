@@ -1,0 +1,9 @@
+{
+  "name": "rozicoin-telegram-webapp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Dependency-free Telegram Web App frontend prototype for Rozicoin.",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

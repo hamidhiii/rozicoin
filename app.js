@@ -1,6 +1,12 @@
+const telegram = window.Telegram?.WebApp;
+const storedTheme = localStorage.getItem("rozicoin-theme");
+
+telegram?.ready?.();
+telegram?.expand?.();
+
 const state = {
   screen: "splash",
-  theme: localStorage.getItem("rozicoin-theme") || "light",
+  theme: storedTheme || telegram?.colorScheme || "light",
   passcodeLength: 0,
   documentType: "Passport",
   network: "TRON",
@@ -1133,6 +1139,20 @@ function note(title, body) {
 
 function goNext() {
   const screen = screens[state.screen];
+  if (state.screen === "receive") {
+    state.toast = "Address copied for the demo.";
+    render();
+    return;
+  }
+
+  if (state.screen === "networkSelector") {
+    state.toast = `${state.network} selected.`;
+  }
+
+  if (state.screen === "support") {
+    state.toast = "Support chat preview opened.";
+  }
+
   if (screen.next) {
     state.screen = screen.next;
     render();

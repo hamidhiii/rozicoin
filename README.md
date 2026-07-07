@@ -6,6 +6,14 @@ Frontend prototype for a Telegram Web App crypto payment client. The demo is ins
 
 Open `index.html` in a browser. The app is a dependency-free static frontend, so no install step is required for the demo.
 
+For a local review URL, run:
+
+```bash
+npm start
+```
+
+Then open `http://127.0.0.1:5174`.
+
 ## Current scope
 
 - Telegram Mini App shell with fixed Back and Main Button behavior
