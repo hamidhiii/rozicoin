@@ -4,15 +4,23 @@ Frontend prototype for a Telegram Web App crypto payment client. The demo is ins
 
 ## Run locally
 
-Open `index.html` in a browser. The app is a dependency-free static frontend, so no install step is required for the demo.
-
-For a local review URL, run:
+Install dependencies and start the Vite dev server:
 
 ```bash
-npm start
+npm install
+npm run dev
 ```
 
 Then open `http://127.0.0.1:5174`.
+
+## Project structure
+
+- `src/components` - shared UI, layout, intro, and app shell components
+- `src/pages` - screen groups for auth, KYC, wallet, send, swap, activity, and settings
+- `src/hooks` - app state, Telegram Web App setup, and motion preference hooks
+- `src/services` - Telegram helpers and mock wallet data/services
+- `src/data` - flow navigation and KYC constants
+- `src/styles` - global design system and animation styles
 
 ## Current scope
 

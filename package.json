@@ -2,8 +2,17 @@
   "name": "rozicoin-telegram-webapp",
   "version": "0.1.0",
   "private": true,
-  "description": "Dependency-free Telegram Web App frontend prototype for Rozicoin.",
+  "description": "Telegram Web App frontend prototype for Rozicoin.",
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "dev": "vite --host 127.0.0.1 --port 5174",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4174"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }
