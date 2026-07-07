@@ -1,5 +1,6 @@
 import { Feature, InfoRow, RecipientRow } from "../../components/ui/index.js";
 import { recentRecipients } from "../../services/walletService.js";
+import { CheckCircle2 } from "lucide-react";
 
 export function SendRecipientPage({ actions, state }) {
   return (
@@ -83,7 +84,9 @@ export function TransferSuccessPage({ state }) {
   return (
     <>
       <section className="success-panel">
-        <span className="icon-badge green">OK</span>
+        <span className="icon-badge green">
+          <CheckCircle2 size={21} strokeWidth={2.5} />
+        </span>
         <h2>${state.sendAmount} USDT sent</h2>
         <p>The transaction is pending confirmation on {state.network}.</p>
       </section>
@@ -159,4 +162,3 @@ export const sendScreens = {
     Component: TransferFailedPage,
   },
 };
-

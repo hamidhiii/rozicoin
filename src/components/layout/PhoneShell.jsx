@@ -1,3 +1,5 @@
+import { ChevronLeft, X } from "lucide-react";
+
 export function PhoneShell({ controller, screen }) {
   const Page = screen.Component;
   const { actions, state } = controller;
@@ -18,15 +20,16 @@ export function PhoneShell({ controller, screen }) {
           disabled={!screen.back}
           onClick={actions.goBack}
           type="button"
+          aria-label="Back"
         >
-          Back
+          <ChevronLeft size={18} strokeWidth={2.4} />
         </button>
         <div>
           <strong>Rozicoin</strong>
           <small>bot</small>
         </div>
-        <button className="chrome-button" type="button">
-          Close
+        <button className="chrome-button" type="button" aria-label="Close">
+          <X size={18} strokeWidth={2.4} />
         </button>
       </div>
 

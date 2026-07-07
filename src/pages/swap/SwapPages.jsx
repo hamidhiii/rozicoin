@@ -1,4 +1,5 @@
 import { Feature, InfoRow, SwapBox } from "../../components/ui/index.js";
+import { CheckCircle2 } from "lucide-react";
 
 export function SwapQuotePage() {
   return (
@@ -39,7 +40,9 @@ export function SwapSuccessPage() {
   return (
     <>
       <section className="success-panel">
-        <span className="icon-badge green">OK</span>
+        <span className="icon-badge green">
+          <CheckCircle2 size={21} strokeWidth={2.5} />
+        </span>
         <h2>1,941.22 TRX received</h2>
         <p>Your wallet balances have been updated in the demo state.</p>
       </section>
@@ -78,4 +81,3 @@ export const swapScreens = {
     Component: SwapSuccessPage,
   },
 };
-

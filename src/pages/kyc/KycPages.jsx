@@ -6,6 +6,7 @@ import {
   LimitRow,
   TimelineRow,
 } from "../../components/ui/index.js";
+import { CheckCircle2 } from "lucide-react";
 
 function DocOption({ active, children, onSelect }) {
   return (
@@ -166,7 +167,9 @@ export function ApprovedPage() {
   return (
     <>
       <section className="success-panel">
-        <span className="icon-badge green">OK</span>
+        <span className="icon-badge green">
+          <CheckCircle2 size={21} strokeWidth={2.5} />
+        </span>
         <h2>Wallet access unlocked</h2>
         <p>Receive, send, swap, and activity pages can now be enabled in the client frontend.</p>
       </section>
@@ -266,4 +269,3 @@ export const kycScreens = {
     Component: RejectedPage,
   },
 };
-

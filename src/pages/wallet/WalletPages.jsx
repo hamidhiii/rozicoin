@@ -9,6 +9,7 @@ import {
   WalletTabs,
 } from "../../components/ui/index.js";
 import { assets, networks } from "../../services/walletService.js";
+import { LockKeyhole } from "lucide-react";
 
 function Toast({ message }) {
   return message ? <div className="toast-banner">{message}</div> : null;
@@ -29,7 +30,9 @@ export function WalletLockedPage({ actions }) {
   return (
     <>
       <section className="surface-block locked-card">
-        <span className="lock-symbol">LOCK</span>
+        <span className="lock-symbol">
+          <LockKeyhole size={22} strokeWidth={2.3} />
+        </span>
         <h2>Complete KYC to unlock wallet actions</h2>
         <p>Balance preview is visible, but receive, send, and swap are disabled until review is approved.</p>
       </section>
@@ -202,4 +205,3 @@ export const walletScreens = {
     Component: ReceivePage,
   },
 };
-
