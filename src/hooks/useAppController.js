@@ -5,6 +5,7 @@ import { useMotionPreference } from "./useMotionPreference.js";
 import { useTelegramWebApp } from "./useTelegramWebApp.js";
 
 const introSeen = () => sessionStorage.getItem("rozicoin-intro-seen") === "true";
+const themeKey = "rozicoin-theme-v2";
 
 export function useAppController(screenRegistry) {
   const motionEnabled = useMotionPreference();
@@ -12,7 +13,7 @@ export function useAppController(screenRegistry) {
 
   const [state, setState] = useState(() => ({
     screen: "splash",
-    theme: localStorage.getItem("rozicoin-theme") || colorScheme || "light",
+    theme: localStorage.getItem(themeKey) || colorScheme || "dark",
     passcodeLength: 0,
     documentType: "Passport",
     network: "TRON",
@@ -140,7 +141,7 @@ export function useAppController(screenRegistry) {
         impact("soft");
         setState((current) => {
           const theme = current.theme === "dark" ? "light" : "dark";
-          localStorage.setItem("rozicoin-theme", theme);
+          localStorage.setItem(themeKey, theme);
           return { ...current, theme };
         });
       },
@@ -150,4 +151,3 @@ export function useAppController(screenRegistry) {
 
   return { actions, state };
 }
-

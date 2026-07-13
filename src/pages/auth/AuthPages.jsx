@@ -7,10 +7,10 @@ export function SplashPage() {
         <div className="app-logo">
           <span>R</span>
         </div>
-        <h1>Crypto payments inside Telegram.</h1>
+        <h1>Rozicoin Pay for Telegram clients.</h1>
         <p className="lead">
-          A client wallet demo for TRON payments, USDT transfers, swap previews, and
-          compliant onboarding.
+          A TRON wallet flow with KYC gates, USDT transfers, swap previews, and
+          payment-style confirmations.
         </p>
         <div className="trust-grid">
           <Metric label="Network" value="TRON" hint="Fast settlement" />
@@ -163,4 +163,3 @@ export const authScreens = {
     Component: RestorePage,
   },
 };
-
