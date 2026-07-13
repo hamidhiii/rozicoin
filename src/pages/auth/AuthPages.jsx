@@ -1,24 +1,35 @@
-import { Consent, Feature, Field, Metric } from "../../components/ui/index.js";
+import { Consent, Feature, Field } from "../../components/ui/index.js";
 
 export function SplashPage() {
   return (
     <>
-      <section className="hero-panel">
-        <div className="app-logo">
-          <span>R</span>
+      <section className="launch-panel">
+        <div className="launch-topline">
+          <div className="app-logo">
+            <span>R</span>
+          </div>
+          <span className="status-pill success">Telegram session</span>
         </div>
-        <h1>Rozicoin Pay for Telegram clients.</h1>
-        <p className="lead">
-          A TRON wallet flow with KYC gates, USDT transfers, swap previews, and
-          payment-style confirmations.
-        </p>
-        <div className="trust-grid">
-          <Metric label="Network" value="TRON" hint="Fast settlement" />
-          <Metric label="KYC" value="Required" hint="Higher limits" />
-          <Metric label="Demo" value="Frontend" hint="No real funds" />
+        <div>
+          <p className="label">Client wallet demo</p>
+          <h2>Rozicoin Pay</h2>
+          <p className="lead">
+            TRON payments, USDT transfers, KYC gates, and swap preview in one Mini App flow.
+          </p>
+        </div>
+        <div className="launch-balance">
+          <span>Demo portfolio</span>
+          <strong>$1,792.12</strong>
+          <small>TRON / TRC20 · unlocks after KYC</small>
+        </div>
+        <div className="launch-actions">
+          <span>Receive</span>
+          <span>Send</span>
+          <span>Swap</span>
+          <span>KYC</span>
         </div>
       </section>
-      <section className="surface-block">
+      <section className="surface-block launch-session">
         <div className="row split">
           <div>
             <p className="label">Telegram session</p>

@@ -1,4 +1,4 @@
-import { ChevronLeft, X } from "lucide-react";
+import { ChevronLeft, ShieldCheck, Sparkles, X } from "lucide-react";
 
 export function PhoneShell({ controller, screen }) {
   const Page = screen.Component;
@@ -24,13 +24,28 @@ export function PhoneShell({ controller, screen }) {
         >
           <ChevronLeft size={18} strokeWidth={2.4} />
         </button>
-        <div>
-          <strong>Rozicoin</strong>
-          <small>bot</small>
+        <div className="app-brand">
+          <span>R</span>
+          <div>
+            <strong>Rozicoin</strong>
+            <small>Telegram Web App</small>
+          </div>
         </div>
         <button className="chrome-button" type="button" aria-label="Close">
           <X size={18} strokeWidth={2.4} />
         </button>
+      </div>
+
+      <div className="app-status-strip" aria-label="Wallet status">
+        <span>
+          <ShieldCheck size={14} strokeWidth={2.4} />
+          KYC Tier 1
+        </span>
+        <span>{state.network}</span>
+        <span>
+          <Sparkles size={14} strokeWidth={2.4} />
+          Demo
+        </span>
       </div>
 
       <article className="phone-screen" data-screen-id={state.screen}>
