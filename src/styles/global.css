@@ -672,7 +672,7 @@ button:disabled {
   gap: 8px;
 }
 
-.launch-actions span {
+.launch-actions button {
   min-width: 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius);
@@ -682,6 +682,12 @@ button:disabled {
   text-align: center;
   font-size: 12px;
   font-weight: 900;
+}
+
+.launch-actions button:hover {
+  border-color: rgba(34, 230, 157, 0.28);
+  background: rgba(34, 230, 157, 0.1);
+  transform: translateY(-2px);
 }
 
 .launch-session {

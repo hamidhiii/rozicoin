@@ -1,6 +1,6 @@
 import { Consent, Feature, Field } from "../../components/ui/index.js";
 
-export function SplashPage() {
+export function SplashPage({ actions }) {
   return (
     <>
       <section className="launch-panel">
@@ -23,10 +23,18 @@ export function SplashPage() {
           <small>TRON / TRC20 · unlocks after KYC</small>
         </div>
         <div className="launch-actions">
-          <span>Receive</span>
-          <span>Send</span>
-          <span>Swap</span>
-          <span>KYC</span>
+          <button onClick={() => actions.goTo("receive")} type="button">
+            Receive
+          </button>
+          <button onClick={() => actions.goTo("sendRecipient")} type="button">
+            Send
+          </button>
+          <button onClick={() => actions.goTo("swapQuote")} type="button">
+            Swap
+          </button>
+          <button onClick={() => actions.goTo("kycIntro")} type="button">
+            KYC
+          </button>
         </div>
       </section>
       <section className="surface-block launch-session">
