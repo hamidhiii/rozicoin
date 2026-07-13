@@ -126,6 +126,7 @@ button:disabled {
   gap: 26px;
   align-items: center;
   justify-content: center;
+  justify-items: center;
   min-height: 100vh;
   padding: clamp(18px, 4vw, 48px);
   background:
@@ -285,6 +286,7 @@ button:disabled {
 
 .phone-stage {
   display: grid;
+  width: 100%;
   place-items: center;
   min-width: 0;
 }
@@ -2297,6 +2299,8 @@ input:focus {
   .workspace {
     grid-template-columns: 1fr;
     align-content: start;
+    justify-content: center;
+    justify-items: center;
   }
 
   .phone-stage {
@@ -2311,6 +2315,23 @@ input:focus {
   }
 }
 
+@media (max-width: 980px) {
+  .workspace {
+    min-height: 100svh;
+    padding: 20px;
+  }
+
+  .phone-shell {
+    width: min(100%, 620px);
+    height: min(780px, calc(100svh - 40px));
+    min-height: 0;
+  }
+
+  .flow-panel {
+    display: none;
+  }
+}
+
 @media (max-width: 860px) {
   .workspace {
     grid-template-columns: 1fr;
@@ -2319,7 +2340,7 @@ input:focus {
   }
 
   .phone-shell {
-    height: min(860px, calc(100vh - 28px));
+    height: min(780px, calc(100svh - 36px));
   }
 
   .intro-stage {
@@ -2336,12 +2357,6 @@ input:focus {
   }
 }
 
-@media (max-width: 720px) {
-  .flow-panel {
-    display: none;
-  }
-}
-
 @media (max-width: 520px) {
   body {
     background: var(--phone-bg);
@@ -2353,14 +2368,14 @@ input:focus {
 
   .workspace {
     display: block;
-    min-height: 100vh;
+    min-height: 100svh;
     padding: 0;
   }
 
   .phone-shell {
     width: 100%;
-    height: 100vh;
-    min-height: 100vh;
+    height: 100svh;
+    min-height: 100svh;
     border: 0;
     border-radius: 0;
     box-shadow: none;
